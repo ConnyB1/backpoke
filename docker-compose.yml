@@ -1,0 +1,16 @@
+services:
+  bdPokemon:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres         # Usuario para la base de datos
+      POSTGRES_PASSWORD: 321      # Contraseña para el usuario
+      POSTGRES_DB: backpoke       # Nombre de la base de datos a crear al iniciar
+    ports:
+      - "5432:5432"               # Exponer el puerto 5432 para conexiones externas
+    volumes:
+      - bd:/var/lib/postgresql/data  # Persistencia de datos
+    restart: unless-stopped
+
+volumes:
+  bd:
+    driver: local
