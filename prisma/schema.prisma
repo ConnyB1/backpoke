@@ -9,10 +9,18 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  oculto    Boolean  @default(false)
+  id                Int      @id @default(autoincrement())
+  email             String   @unique
+  password          String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  oculto            Boolean  @default(false)
+  favoritePokemon   Pokemon @relation(fields: [favoritePokemonId], references: [id])
+  favoritePokemonId Int
+}
+
+model Pokemon {
+  id    Int    @id @default(autoincrement())
+  name  String
+  users User[]
 }

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 
@@ -46,10 +46,11 @@ describe('UserService', () => {
         email: 'test@example.com',
         password: '123456',
       };
-      
+
+      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
       jest.spyOn(prismaService.user, 'create').mockResolvedValue(respuesta);
 
-      const result = await service.findAll();
+      const result = await service.create(usuario);
       expect(result).toEqual(respuesta);
       expect(prismaService.user.create).toHaveBeenCalledWith({
         data: usuario,
@@ -62,7 +63,7 @@ describe('UserService', () => {
       const usuarios: User[] = [respuesta];
 
       jest.spyOn(prismaService.user, 'findMany').mockResolvedValue(usuarios);
-      
+
       const result = await service.findAll();
       expect(result).toEqual(usuarios);
       expect(prismaService.user.findMany).toHaveBeenCalled();
@@ -85,7 +86,7 @@ describe('UserService', () => {
     it('Si la función no se encuentra nada en la BD', async () => {});
   });
 
-  describe('update', () => {   
+  describe('update', () => {
     it('should update a user', async () => {
       const id = 1;
       const updateUserDto = {
@@ -100,7 +101,7 @@ describe('UserService', () => {
       expect(prismaService.user.update).toHaveBeenCalledWith({
         where: { id },
         data: updateUserDto,
-      });  
+      });
     });
     it('Si la función no se encuentra nada en la BD', async () => {});
   });

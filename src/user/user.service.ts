@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';  
+import { PrismaService } from '../prisma/prisma.service';  
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -14,11 +14,11 @@ export class UserService {
    * @returns Usuario creado o mensaje de error
    */
 
-   async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     const emailExists = await this.prisma.user.findUnique({
-      where: {email: createUserDto.email},
+      where: { email: createUserDto.email },
     });
-    if (!emailExists) {
+    if (emailExists) {
       this.logger.error(`El email ${createUserDto.email} ya existe`);
       throw new ConflictException('El correo ya esta registrado');
     }
@@ -44,10 +44,10 @@ export class UserService {
     });
   }
 
-  remove(id: number){
+  remove(id: number) {
     return this.prisma.user.update({
-        where: { id },
-        data: {oculto: true},
-    })
+      where: { id },
+      data: { oculto: true },
+    });
   }
 }
